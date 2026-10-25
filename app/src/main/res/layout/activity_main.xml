@@ -16,6 +16,12 @@
             <Button android:id="@+id/btnReview" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Review events" />
             <Button android:id="@+id/btnDigestTime" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
         </LinearLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Smart titles (optional)" android:textStyle="bold" android:layout_marginTop="16dp" />
+        <TextView android:id="@+id/txtModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textSize="13sp" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+            <Button android:id="@+id/btnModel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnPick" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Use a model file" />
+        </LinearLayout>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Your folders (under Pictures/):" android:textStyle="bold" android:layout_marginTop="16dp" />
         <LinearLayout android:id="@+id/folderList" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp">

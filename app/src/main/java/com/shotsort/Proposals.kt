@@ -43,14 +43,26 @@ object Proposals {
         c.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().putString(KEY, a.toString()).apply()
     }
 
-    /** Returns false if an identical event (same title and start) is already waiting. */
+    /** Returns the stored event, or null if an identical one (same title and start) is already waiting. */
     @Synchronized
-    fun add(c: Context, title: String, start: Long, end: Long, allDay: Boolean, location: String, notes: String): Boolean {
+    fun add(c: Context, title: String, start: Long, end: Long, allDay: Boolean, location: String, notes: String): Proposal? {
         val l = all(c)
-        if (l.any { it.title.equals(title, true) && it.start == start }) return false
-        l.add(Proposal(UUID.randomUUID().toString(), title, start, end, allDay, location, notes))
+        if (l.any { it.title.equals(title, true) && it.start == start }) return null
+        val p = Proposal(UUID.randomUUID().toString(), title, start, end, allDay, location, notes)
+        l.add(p)
         save(c, l)
-        return true
+        return p
+    }
+
+    /** Swaps in a better title (and a place, if none was found yet). Ignored if the event is already gone. */
+    @Synchronized
+    fun update(c: Context, id: String, title: String, location: String) {
+        val l = all(c)
+        val i = l.indexOfFirst { it.id == id }
+        if (i < 0) return
+        val p = l[i]
+        l[i] = p.copy(title = title, location = if (p.location.isEmpty() && location.isNotEmpty()) location else p.location)
+        save(c, l)
     }
 
     @Synchronized

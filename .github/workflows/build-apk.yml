@@ -9,13 +9,13 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Install Gradle 8.7
+      - name: Install Gradle 8.13
         run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip -O /tmp/gradle.zip
+          wget -q https://services.gradle.org/distributions/gradle-8.13-bin.zip -O /tmp/gradle.zip
           unzip -q /tmp/gradle.zip -d /tmp
-          echo "/tmp/gradle-8.7/bin" >> $GITHUB_PATH
-      - name: Build Debug APK
-        run: gradle :app:assembleDebug --no-daemon
+          echo "/tmp/gradle-8.13/bin" >> $GITHUB_PATH
+      - name: Test and build debug APK
+        run: gradle :app:testDebugUnitTest :app:assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

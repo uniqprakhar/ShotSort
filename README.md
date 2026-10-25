@@ -11,3 +11,10 @@ Any new image in `Pictures/Calendar` is read on the phone (ML Kit text recogniti
 - First run needs internet once to download the small date-finding model; after that it works offline.
 - English text only. Images already in the folder before you installed this version are ignored.
 - Grant Calendar access when asked. Use "Review events" on the home screen to look at pending events at any time.
+
+## Smart titles (optional, open source, on your phone)
+The home screen can download a small open language model (Qwen2.5 1.5B Instruct, Apache-2.0, about 1 GB, run through the MIT-licensed llama.cpp). After ML Kit has found an event's date and time, the model reads the screenshot text and suggests a short title and place. It never decides the date or time, and its suggestion is only used if it matches words that really appear in the screenshot; otherwise the built-in title stays.
+- Runs in a separate process that is shut down after use, so a problem with the model cannot stop screenshot watching.
+- Needs the INTERNET permission only for the one-time model download. You can instead pick a GGUF file you downloaded yourself ("Use a model file").
+- Takes roughly 10-40 seconds per event in the background; results are ready by the evening review.
+- If the model crashes 3 times it is switched off automatically.

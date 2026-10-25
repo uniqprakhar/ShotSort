@@ -134,8 +134,15 @@ object Analyzer {
         var added = 0
 
         fun lineOf(offset: Int) = text.substring(0, minOf(offset, text.length)).count { it == '\n' }
+        var offsetForEvent = 0
         fun add(title: String, start: Long, end: Long, allDay: Boolean) {
-            if (Proposals.add(app, title, start, end, allDay, location, notes)) added++
+            val p = Proposals.add(app, title, start, end, allDay, location, notes) ?: return
+            added++
+            // Optional: let the small on-phone model write a nicer title. Safe to ignore if it is not installed.
+            if (TitleClient.enabled(app)) {
+                val prompt = TitlePrompt.build(TitlePrompt.window(text, offsetForEvent), TitlePrompt.whenText(start, allDay))
+                TitleClient.request(app, p.id, text, prompt)
+            }
         }
 
         val byLine = work.groupBy { lineOf(it.offset) }.toSortedMap()
@@ -144,6 +151,7 @@ object Analyzer {
             val timed = sorted.filter { !it.allDay }
             val days = sorted.filter { it.allDay }
             val title = titleFor(lines, li, sorted, allStrs)
+            offsetForEvent = sorted.first().offset
             for (h in days) {
                 if (timed.any { midnight(it.ts) == midnight(h.ts) }) continue
                 add(title, midnight(h.ts), midnight(h.ts) + DAY, true)

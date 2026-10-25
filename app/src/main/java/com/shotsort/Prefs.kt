@@ -12,6 +12,10 @@ object Prefs {
     private const val CAL_SINCE = "calendarSince"
     private const val DIGEST_MIN = "digestMinutes"
     private const val LAST_SCAN = "lastScan"
+    private const val MODEL_READY = "modelReady"
+    private const val DOWNLOAD_ID = "downloadId"
+    private const val MODEL_NOTE = "modelNote"
+    private const val TITLE_FAILS = "titleFailures"
 
     /** The folder whose new images are read for events. */
     const val CALENDAR = "Calendar"
@@ -77,4 +81,14 @@ object Prefs {
     /** One-line result of the most recent Calendar-folder scan, shown on the home screen. */
     fun setLastScan(c: Context, msg: String) { sp(c).edit().putString(LAST_SCAN, msg).apply() }
     fun lastScan(c: Context): String = sp(c).getString(LAST_SCAN, "") ?: ""
+
+    // ---- optional on-phone title model ----
+    fun modelReady(c: Context): Boolean = sp(c).getBoolean(MODEL_READY, false)
+    fun setModelReady(c: Context, v: Boolean) { sp(c).edit().putBoolean(MODEL_READY, v).apply() }
+    fun downloadId(c: Context): Long = sp(c).getLong(DOWNLOAD_ID, -1L)
+    fun setDownloadId(c: Context, id: Long) { sp(c).edit().putLong(DOWNLOAD_ID, id).apply() }
+    fun modelNote(c: Context): String = sp(c).getString(MODEL_NOTE, "") ?: ""
+    fun setModelNote(c: Context, m: String) { sp(c).edit().putString(MODEL_NOTE, m).apply() }
+    fun titleFailures(c: Context): Int = sp(c).getInt(TITLE_FAILS, 0)
+    fun setTitleFailures(c: Context, n: Int) { sp(c).edit().putInt(TITLE_FAILS, n).apply() }
 }
