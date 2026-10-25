@@ -43,9 +43,12 @@ class ScreenshotService : Service() {
                 val rel = c.getString(2) ?: ""
                 val added = c.getLong(3)
                 val nowSec = System.currentTimeMillis() / 1000
-                if (nowSec - added > 25) return
-                val isShot = rel.contains("Screenshot", true) || name.contains("Screenshot", true)
-                if (!isShot) return
+                if (nowSec - added > 60) return
+                // Only files that landed in a Screenshots folder (DCIM/Screenshots on Samsung,
+                // Pictures/Screenshots on Pixel). Matching on file name alone made sorted copies
+                // look like new screenshots.
+                val isShot = rel.contains("Screenshot", true)
+                if (!isShot || Prefs.isHandled(this, id)) return
                 val uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString())
                 notifySort(uri, name)
             }

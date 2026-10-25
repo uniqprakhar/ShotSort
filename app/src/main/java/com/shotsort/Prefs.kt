@@ -28,4 +28,23 @@ object Prefs {
     fun remove(c: Context, name: String) {
         val l = load(c); l.removeAll { it == name }; save(c, l)
     }
+
+    private const val HANDLED = "handled"
+    private const val WATCHING = "watching"
+
+    /** Ids of files ShotSort created itself, so they are never offered for sorting again. */
+    fun markHandled(c: Context, id: Long) {
+        val sp = c.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+        val ids = (sp.getString(HANDLED, "") ?: "").split(",").filter { it.isNotEmpty() }.toMutableList()
+        ids.add(id.toString())
+        sp.edit().putString(HANDLED, ids.takeLast(100).joinToString(",")).apply()
+    }
+    fun isHandled(c: Context, id: Long): Boolean =
+        (c.getSharedPreferences(FILE, Context.MODE_PRIVATE).getString(HANDLED, "") ?: "").split(",").contains(id.toString())
+
+    fun setWatching(c: Context, on: Boolean) {
+        c.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().putBoolean(WATCHING, on).apply()
+    }
+    fun isWatching(c: Context): Boolean =
+        c.getSharedPreferences(FILE, Context.MODE_PRIVATE).getBoolean(WATCHING, true)
 }

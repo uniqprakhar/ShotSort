@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         list = findViewById(R.id.folderList)
         findViewById<Button>(R.id.btnStart).setOnClickListener { ensurePermsAndStart() }
-        findViewById<Button>(R.id.btnStop).setOnClickListener { stopService(Intent(this, ScreenshotService::class.java)); toast("ShotSort stopped") }
+        findViewById<Button>(R.id.btnStop).setOnClickListener { stopService(Intent(this, ScreenshotService::class.java)); Prefs.setWatching(this, false); toast("ShotSort stopped") }
         findViewById<Button>(R.id.btnAdd).setOnClickListener {
             val input = findViewById<EditText>(R.id.inputFolder)
             val name = input.text.toString()
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) need.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         if (need.isNotEmpty()) { ActivityCompat.requestPermissions(this, need.toTypedArray(), 1); if (auto) return; }
-        try { ContextCompat.startForegroundService(this, Intent(this, ScreenshotService::class.java)); if (!auto) toast("ShotSort watching") }
+        try { ContextCompat.startForegroundService(this, Intent(this, ScreenshotService::class.java)); Prefs.setWatching(this, true); if (!auto) toast("ShotSort watching") }
         catch (e: Exception) { toast("Could not start: ${e.message}") }
     }
     private fun toast(m: String) = Toast.makeText(this, m, Toast.LENGTH_SHORT).show()
