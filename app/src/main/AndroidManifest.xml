@@ -6,11 +6,15 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <application android:label="ShotSort" android:theme="@style/Theme.ShotSort" android:allowBackup="true">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity>
         <activity android:name=".SortActivity" android:exported="false" android:theme="@style/Theme.ShotSort.Sheet" android:launchMode="singleTop" />
+        <activity android:name=".ReviewActivity" android:exported="false" android:launchMode="singleTop" />
+        <receiver android:name=".DigestReceiver" android:exported="false" />
         <service android:name=".ScreenshotService" android:foregroundServiceType="specialUse" android:exported="false">
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Watches the media library for new screenshots so the user can sort them into folders" />
         </service>

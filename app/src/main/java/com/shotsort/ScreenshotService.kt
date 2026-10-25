@@ -19,9 +19,29 @@ class ScreenshotService : Service() {
             override fun onChange(self: Boolean, uri: Uri?) {
                 super.onChange(self, uri)
                 checkLatest()
+                scanCalendarFolder()
             }
         }
         contentResolver.registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, true, observer!!)
+        Digest.schedule(this)
+        scanCalendarFolder()
+    }
+    /** Reads every new image in Pictures/Calendar (sorted there by ShotSort or dropped in by hand). */
+    private fun scanCalendarFolder() {
+        try {
+            val proj = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED)
+            val sel = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? AND ${MediaStore.Images.Media.DATE_ADDED} >= ?"
+            val args = arrayOf("Pictures/${Prefs.CALENDAR}/%", Prefs.calendarSince(this).toString())
+            contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj, sel, args, "${MediaStore.Images.Media.DATE_ADDED} ASC")?.use { c ->
+                while (c.moveToNext()) {
+                    val id = c.getLong(0)
+                    if (Prefs.isProcessed(this, id)) continue
+                    Prefs.markProcessed(this, id)
+                    val uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString())
+                    Analyzer.analyze(this, id, uri, c.getLong(1) * 1000)
+                }
+            }
+        } catch (_: Exception) {}
     }
     private fun startFg() {
         val ch = "shotsort"
