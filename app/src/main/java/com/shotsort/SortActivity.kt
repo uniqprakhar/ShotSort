@@ -26,7 +26,6 @@ class SortActivity : AppCompatActivity() {
             moveTo(input.trim())
         }
     }
-
     private fun renderChips() {
         val grid = findViewById<LinearLayout>(R.id.chipList)
         grid.removeAllViews()
@@ -41,7 +40,6 @@ class SortActivity : AppCompatActivity() {
         val skip = Button(this).apply { text = "Leave in Screenshots"; setOnClickListener { finish() } }
         grid.addView(skip)
     }
-
     private fun moveTo(folder: String) {
         val clean = folder.trim().replace(Regex("[/\\\\]"), "-").take(40).ifEmpty { "Unsorted" }
         try {
@@ -50,7 +48,6 @@ class SortActivity : AppCompatActivity() {
         } catch (e: Exception) { toast("Couldn't move: ${e.message}") }
         finish()
     }
-
     private fun moveImage(uri: Uri?, displayName: String, folder: String): Boolean {
         val resolver = contentResolver
         val safeName = displayName.ifBlank { "screenshot_${System.currentTimeMillis()}.png" }
@@ -72,6 +69,5 @@ class SortActivity : AppCompatActivity() {
         } catch (_: Exception) {}
         return true
     }
-
     private fun toast(m: String) = Toast.makeText(this, m, Toast.LENGTH_SHORT).show()
 }
